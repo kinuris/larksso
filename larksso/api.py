@@ -2,6 +2,11 @@ import frappe
 import requests
 from urllib.parse import urlencode
 
+def get_success_redirect_route():
+    settings = frappe.get_cached_doc("LarkSSO Settings")
+
+    return settings.redirect_route
+
 def get_lark_credentials():
     social_login_key = frappe.get_doc("Social Login Key", {"provider_name": "Lark"})
 
@@ -108,4 +113,4 @@ def oauth2_login(state: str):
     login_manager.post_login()
 
     frappe.local.response["type"] = "redirect"
-    frappe.local.response["location"] = "/helpdesk"
+    frappe.local.response["location"] = get_success_redirect_route()
